@@ -42,6 +42,9 @@ def post(request):
                 print('ULALALALA ULALA ULALA ULALA')
                 data = download_certificate(request)
                 return Response(data)
+            elif report_type == 'notify_form':
+                data = notify(request)
+                return data
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -192,4 +195,16 @@ def download_certificate(request):
         print(e)
         print('Cannot open the fucking file!')
         return "cant_open_file"
+    
+def notify(request):
+    try:
+        data = dict(request.data)
+        print(data)
+        formData = Notifier(**data)
+        print(formData)
+        formData.save()
+        return "ok"
+    except Exception as e:
+        print(e)
+        return "not_ok"
     

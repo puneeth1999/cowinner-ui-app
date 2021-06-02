@@ -14,3 +14,6 @@ def download(request):
             'my_file_url' : my_file_url
         }
         return render(request, 'pages/download.html', context)
+    
+def notify(request):
+    return render(request, 'pages/notify.html')
