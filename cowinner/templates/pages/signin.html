@@ -15,8 +15,8 @@
             <div class="row d-flex">
                 <div class="col-lg-6">
                     <div class="card1 pb-5">
-                        <div class="row"> <img src="{% static 'img/COWINNER.svg' %}" class="logo"> </div>
-                        <div class="row px-3 justify-content-center mt-4 mb-5 border-line"> <img src="{% static 'img/login-banner.jpg' %}" class="image"> </div>
+                        <div class="row"> <img src="{% static 'img/COWINNER.svg' %}" class="logo" > </div>
+                        <div class="row px-3 justify-content-center mt-4 mb-5 border-line"> <img src="{% static 'img/login-banner.jpg' %}" class="image" style="height:auto;"> </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -33,7 +33,7 @@
                             {% csrf_token %}
                             <div class="row px-3"> 
                                 <label class="mb-1" for="phone"><h6 class="mb-0 text-sm">Phone Number</h6></label> 
-                                <input class="mb-4" type="text" name="phone" placeholder="+91__________"> 
+                                <input class="mb-4" type="text" name="phone" placeholder="+91__________" autocomplete="off"> 
                             </div>
 
                             <div class="row mb-3 px-3"> <button type="submit" class="btn btn-blue text-center" name="button1">Send OTP</button> 
@@ -52,13 +52,23 @@
                             
                             <div class="row px-3"> 
                                 <label class="mb-1"><h6 class="mb-0 text-sm">OTP</h6></label> 
-                                <input type="password" name="otp" placeholder="Enter OTP"> 
+                                <input type="password" name="otp" placeholder="Enter OTP" autocomplete="new-password"> 
                             </div>
                             <div class="row px-3 mb-4">
                                 <a href="#" class="ml-auto mb-0 text-sm">Re-send OTP</a>
                             </div>
-                            <div class="row mb-3 px-3"> <button type="submit" class="btn btn-blue text-center" name="button1">Confirm OTP</button> 
+
+
+                            <div class="row px-3"> 
+                                <label class="mb-1" for="beneficiary_id" ><h6 class="mb-0 text-sm">Beneficiary ID</h6></label> 
+                                <input class="mb-4" type="text" id="beneficiary_id" name="beneficiary_id" > 
+                            </div>
+
+                            <div class="row mb-3 px-3"> <button type="submit" class="btn btn-blue text-center" id="button2" name="button2">Confirm OTP</button> 
                             </div> 
+                            
+                            </div>
+
                             </div>
                         </form>
                         
@@ -67,7 +77,7 @@
             </div>
             <div class="bg-blue py-4">
                 <div class="row px-3"> <small class="ml-4 ml-sm-5 mb-2">Copyright &copy; 2019. All rights reserved.</small>
-                    <div class="social-contact ml-4 ml-sm-auto"> <span class="fa fa-facebook mr-4 text-sm"></span> <span class="fa fa-google-plus mr-4 text-sm"></span> <span class="fa fa-linkedin mr-4 text-sm"></span> <span class="fa fa-twitter mr-4 mr-sm-5 text-sm"></span> </div>
+                    <div class="social-contact ml-4 ml-sm-auto"> <span class="fa fa-twitter mr-4 mr-sm-5 text-sm">Puneeth C</span> </div>
                 </div>
             </div>
         </div>
@@ -259,6 +269,9 @@
     <!-- Sweet Alerts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Font Aweson Icons -->
+    <!-- <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" data-auto-replace-svg="nest"></script> -->
+
 
     <script>
         $(document).on("submit", "#send_otp_form", function(e){
@@ -288,11 +301,14 @@
                             allowOutsideClick: false,
                             showConfirmButton: false,
                         })
+                        form1.style.display = "none";
+                        form2.style.display = "block";
                     }else if(result == "not_ok"){
                         Swal.fire({
                             icon: 'error',
                             title: 'OTP couldn\'t be Sent!',
-                            timer: 1500,
+                            text: 'OTP could be only sent to a mobile number once in every 3 minutes',
+                            timer: 3000,
                             allowEscapeKey: true,
                             allowOutsideClick: false,
                             showConfirmButton: false,
@@ -310,14 +326,16 @@
                 if (pair[0] == 'phone'){
                     console.log('if statement entered');
                     document.getElementById('form_2_phone').value = pair[1];
+                    document.getElementById('form_2_phone').disabled = true;
+                    document.getElementById('form_2_phone').style.backgroundColor="#d4d4d4";
                 }
             }
             form1 = document.getElementById('send_otp_form');
             form2 = document.getElementById('confirm_otp_form');
             //console.log(form1);
             //console.log(form2);
-            form1.style.display = "none";
-            form2.style.display = "block";
+            
+            
         });
         
         
@@ -347,28 +365,134 @@
                     if(result == "ok"){
                         Swal.fire({
                             icon: 'success',
-                            title: 'OTP Sent!',
+                            title: 'OTP Verified!',
                             timer: 1500,
                             allowEscapeKey: true,
                             allowOutsideClick: false,
                             showConfirmButton: false,
-                        })
+                        });
+                        
                     }else if(result == "not_ok"){
                         Swal.fire({
                             icon: 'error',
-                            title: 'OTP couldn\'t be Sent!',
+                            title: 'Invalide OTP',
                             timer: 1500,
                             allowEscapeKey: true,
                             allowOutsideClick: false,
                             showConfirmButton: false,
                         })
                     }
+                    else if(result  == "b_id_not_exist"){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Certificate Not Found',
+                            text: "Did you enter the right beneficiary ID?",
+                            timer: 4000,
+                            allowEscapeKey: true,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        })
+                    }
+                    var form = document.getElementById('confirm_otp_form');
+                    form.id = 'download_form';
+                    console.log('changed the form id');
+                    var button = document.getElementById('button2');
+                    button.id = 'download_button';
+                    button.innerHTML = 'Download';
+                    console.log('changed the text of the button');
+                    
                 },
                 error:function(jqXHR, textStatus, errorThrown){
                     console.log(errorThrown);
                 }
             });
+
+            
+
         });
-        var form = document.getElementById('send_otp_form');
+    </script>
+    <script>
+        $(document).on("submit", "#download_form", function(e){
+            e.preventDefault();
+            console.log('script entered!');
+            var form = document.getElementById('download_form');
+            console.log(form);
+            var formData = new FormData(form);
+            console.log(formData);
+            for( var pair of formData.entries()){
+                console.log(pair[0] + " - " + pair[1]);
+            }
+            var url = '/signin/post/?report_type=download_form';
+
+            $.ajax({
+                url:url,
+                type:"POST",
+                data: formData,
+                processData:false,
+                contentType:false,
+                success:function(result, textStatus, xhr){
+                    if(result == "COVAXIN"){
+                        console.log('LOG LE MERA');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'You\'re Safe',
+                            text: 'The dude/dudette has taken Covaxin',
+                            timer: 3500,
+                            allowEscapeKey: true,
+                            showConfirmButton: true,
+                        });
+                        
+                    }else if(result == "COVISHIELD"){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'You\'re Safe',
+                            text: 'The dude/dudette has taken Covishield',
+                            timer: 3500,
+                            allowEscapeKey: true,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        })
+                    }
+                    else if(result  == "something_wrong"){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Shit is WRONG',
+                            text: "something went wrong",
+                            timer: 4000,
+                            allowEscapeKey: true,
+                            allowOutsideClick: false,
+                            //showConfirmButton: false,
+                        })
+                    }else if(result == "cant_open_file"){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Wrong details provided!',
+                            text: "something went wrong",
+                            timer: 4000,
+                            allowEscapeKey: true,
+                            allowOutsideClick: false,
+                            //showConfirmButton: false,
+                        })
+                    }
+                    /*
+                    var form = document.getElementById('confirm_otp_form');
+                    form.id = 'download_form';
+                    console.log('changed the form id');
+                    var button = document.getElementById('button2');
+                    button.id = 'download_button';
+                    button.innerHTML = 'Check';
+                    console.log('changed the text of the button');
+                    */
+                    
+                },
+                error:function(jqXHR, textStatus, errorThrown){
+                    console.log(errorThrown);
+                }
+            });
+
+            
+
+        });
+
     </script>
 {% endblock content %}

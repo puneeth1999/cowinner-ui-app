@@ -145,6 +145,22 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'cowinner/static')
 ]
 
+# Media
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+if get_config('Server_check')=='True':
+    SESSION_COOKIE_SECURE = True,
+    CSRF_COOKIE_SECURE = True,
+    SECURE_SSL_REDIRECT = True,
+    
+    SECURE_HSTS_SECONDS = 31536000,
+    SECURE_HSTS_PRELOAD = True,
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
